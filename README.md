@@ -46,16 +46,20 @@ De forma adicional, adicionamos no [_branch_](https://git-scm.com/book/pt-br/v1/
 
 # Instalação
 
+
 ## Rápido (sujeito a bugs):
-  
+
+
+Supõe a presença de um dos comandos listados abaixo:
+
   - Executar o arquivo de instalação pelo [curl](https://pt.wikipedia.org/wiki/Curl):
   ```
-  $ curl -o- https://raw.githubusercontent.com/lunhg/install/blob/dev/install.sh | bash
+  $ curl -o- https://gitlab.com/install/install/raw/dev/install.sh | bash
   ```
   
   - ou [wget](https://pt.wikipedia.org/wiki/Wget):
   ```
-  wget -qO- https://raw.githubusercontent.com/lunhg/install/blob/dev/install.sh | bash
+  wget -qO- https://gitlab.com/install/install/raw/dev/install.sh | bash
   ```
 
 ## Desenvolvedores
@@ -72,6 +76,52 @@ $ git clone https://www.github.com/redelivre/install $HOME/redelivre/install
 $ git remote add lunhg https://www.github.com/lunhg/install
 $ git remote add gitlab git@gitlab.com:install/install.git 
 ```
+### Crie um arquivo .env
+
+O arquivo `.env` será utilizado para flexibilzar instâncias diversas do _software_. Em outras palavras, permitirá que um mesmo código-fonte poderá gerar, de acordo com variáveis de ambiente diferentes, servidores diversos com a mesma função.
+
+Estes arquivos serão lidos pelo `docker-compose` e são acompanhados por um `$` no arquivo `docker-compose.yml`.
+
+```
+# Imagens de base
+username=hacker
+apk_dependencies=sudo make git
+TRAVIS_LOCAL=senhasupersecreta
+NODE_ENV=10.11.0
+
+# Pontos de acesso
+redisUI=redis.local
+wordpress=wp.local
+loginCidadao=lc.local
+minio=s3.alarm.local
+adminer=adminer.local
+phpmyadmin=phpmyadmin.local
+smtp=smtp.local
+elk=elk.local
+traefik=lb.local
+tgbot=bot.local
+api=api.local
+
+# Robo
+TELEGRAM_NAME=R4dar
+TELEGRAM_DOMAIN=https://api.local
+TELEGRAM_TOKEN=<token>
+TELEGRAM_ADMINS=<admin1>+<admin2>+<admin3>...
+
+# API robo
+assistente_node_env=production
+assistente_port=3000
+assistente_redis_host=redis.local
+assistente_redis_port=6379
+assistente_redis_db=0
+assistente_jwt_issuer=<nome_do_issuer>
+assistente_jwt_audience=https://api.local
+assistente_session_name=<nome_para_sessions>
+assistente_secret=<segredo_sessions>
+openid_id=<id_openid>
+openid_secret=<segredo_openid>
+
+```
 
 ### Execute
 
@@ -84,7 +134,9 @@ $ ./install.sh
 
 ## Pós- instalção
 
-O _script_ `install.sh`executará, ao fim de suas ações, a receita `redelivre` do programa `Make`, cuja ação principal é subir alguns serviços depois de 120 minutos, dependendo da conexão com a internet e do processador do computador. As urls adicionadas ao host estarão funcionando correntamente, se tudo deu certo no build.
+O _script_ `install.sh`executará, ao fim de suas ações, a receita `redelivre` do programa `Make`, cuja ação principal é compilar imagens customizadas, configurar e subir serviços, de maneira automática, na sua máquina local, ou servidor remoto, o que pode levar mais de 120 minutos, dependendo da conexão com a internet e do processador do computador. 
+
+As urls adicionadas ao host estarão funcionando correntamente, se tudo deu certo no build.
 
 Caso ocorra algum problema, execute o comando:
 

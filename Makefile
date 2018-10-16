@@ -8,12 +8,14 @@ redelivre: start app_lc_migrations app_wp_migrations app_mc_migrations
 	make urls
 
 app_lc_build_frontend:
+	echo "==> Executing migrations on login-cidadao frontend..."
 	docker-compose exec app_lc php app/console assets:install
 	docker-compose exec app_lc rm -rf app/cache/prod
 	docker-compose exec app_lc php app/console assetic:dump -e prod
 	docker-compose exec app_lc chmod -R 777 /var/www/html/app/cache/
 
 app_lc_migrations:
+	echo "==> Executing migrations on login-cidadao..."
   sleep: 5
 	docker-compose exec mariadb mysql -uroot -p"11111" -e "create database lc;"
 	docker-compose exec app_lc php app/console doctrine:schema:create
@@ -21,6 +23,7 @@ app_lc_migrations:
 	docker-compose exec app_lc php app/console doctrine:schema:update --force
 
 app_mc_migrations:
+	echo "==> Executing migrations on mapasculturais..."
 	docker-compose exec app_mc ./scripts/db-update.sh
 	docker-compose exec app_mc ./scripts/mc-db-updates.sh -d mc.redelivre
 	docker-compose exec app_mc ./scripts/generate-proxies.sh
@@ -28,28 +31,36 @@ app_mc_migrations:
 	# docker-compose exec postgres psql -d mapas -U mapas -f ../db/initial-data.sql
 
 app_wp_migrations:
+	echo "==> Executing migrations on wordpress..."
 	docker-compose exec app_wp wp --allow-root core install  --path=./web/wp --url=https://redelivre --title=teste-redelivre --admin_user=root --admin_password=123 --skip-email --admin_email=teste@teste.com
 	docker-compose exec app_wp wp --allow-root plugin activate wpro
 
 lc:
+	echo "==> Starting building login-cidadao..."
 	docker-compose up --build -d --remove-orphans app_lc web_lc
 
 mc:
+	echo "==> Starting building mapasculturais..."
 	docker-compose up --build -d --remove-orphans app_mc web_mc
 
 wp:
+	echo "==> Starting building wordpress..."
 	docker-compose up --build -d --remove-orphans web_wp
 
 traefik:
+	echo "==> Starting building traefik load balancer..."
 	docker-compose up --build -d --remove-orphans traefik
 
 alpine:
+	echo "==> Starting building alpine base image..."
 	docker-compose up --build -d --remove-orphans alpine
 
 rd:
+	echo "==> Starting building redis base image and its derived images..."
 	docker-compose up --build -d --remove-orphans __redis__ redis redisAdmin redisUI 
 
 nd:
+	echo "==> Starting building node base image and its derived images..."
 	docker-compose up --build -d --remove-orphans __node__ tg_bot assistente_api
 
 build: lc mc wp alpine nd rd
@@ -57,15 +68,15 @@ build: lc mc wp alpine nd rd
 start: build
 
 stop:
-	@echo "Stopping your project..."
+	echo "Stopping your project..."
 	docker-compose stop
 
 destroy: stop
-	@echo "Deleting all containers..."
+	echo "Deleting all containers..."
 	docker-compose down --rmi all 
 
 upgrade:
-	@echo "Upgrading your project..."
+	echo "Upgrading your project..."
 	docker-compose pull
 	docker-compose build --pull
 	# make composer update
