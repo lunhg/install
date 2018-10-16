@@ -41,42 +41,30 @@ cd $HOME/redelivre/install \
     && git fetch --all && git pull $REMOTE $BRANCH
     
 # Configure a .env file
-for i "username=$(echo whoami)" "apk_dependencies=sudo make git" "TRAVIS_LOCAL=senhasupersecreta" "NODE_ENV=10.11.0" "redisUI=redis.$(echo hostname)" "wordpress=wp.$(echo hostname)" "loginCidadao=lc.$(echo hostname)" "minio=s3.$(echo hostname)" "adminer=adminer.$(echo hostname)" "phpmyadmin=phpmyadmin.$(echo hostname)" "smtp=smtp.$(echo hostname)" "elk=elk.$(echo hostname)" "traefik=lb.$(echo hostname)" "tgbot=tgbot.$(echo hostname)" "api=api.tgbot.$(echo hostname)" "assistente_node_env=production" "assistente_port=3000" "assistente_redis_host=$(echo hostname)" "assistente_redis_port=6379" "assistente_redis_db=0" "assistente_jwt_issuer=feathers-plus" "assistente_jwt_audience=https://api.tgbot.$(echo hostname)" "assistente_session_name=ASSISTENTE-JWT" ; do echo $i >> $HOME/redelivre/install/.env ; done
+for i in "username=$(whoami)" "apk_dependencies=sudo make git" "TRAVIS_LOCAL=senhasupersecreta" "NODE_ENV=10.11.0" "redisUI=redis.$(hostname)" "wordpress=wp.$(hostname)" "loginCidadao=lc.$(hostname)" "minio=s3.$(hostname)" "adminer=adminer.$(hostname)" "phpmyadmin=phpmyadmin.$(hostname)" "smtp=smtp.$(hostname)" "elk=elk.$(hostname)" "traefik=lb.$(hostname)" "tgbot=tgbot.$(hostname)" "api=api.tgbot.$(hostname)" "assistente_node_env=production" "assistente_port=3000" "assistente_redis_host=$(hostname)" "assistente_redis_port=6379" "assistente_redis_db=0" "assistente_jwt_issuer=feathers-plus" "assistente_jwt_audience=https://api.tgbot.$(hostname)" "assistente_session_name=ASSISTENTE-JWT" ; do echo $i >> $HOME/redelivre/install/.env ; done
 
 echo "Type a name for your telegram bot [ENTER]:"
 read name
-echo "TELEGRAM_NAME=$(name)" >> $HOME/redelivre/install/.env
+echo "TELEGRAM_NAME=$name" >> $HOME/redelivre/install/.env
 
 echo "Type a token for your telegram bot [ENTER]:"
 read token
-echo "TELEGRAM_TOKEN=$(token)" >> $HOME/redelivre/install/.env
+echo "TELEGRAM_TOKEN=$token" >> $HOME/redelivre/install/.env
 
 echo "Type 3 admins for your telegram bot, followed by '+' [ENTER]:"
 read admins
-echo "TELEGRAM_ADMINS=$(admins)" >> $HOME/redelivre/install/.env
-
-
-echo "Type a name for your telegram bot [ENTER]:"
-read name
-echo "TELEGRAM_NAME=$(name)" >> $HOME/redelivre/install/.env
-
-echo "Type a token for your telegram bot [ENTER]:"
-read token
-echo "TELEGRAM_TOKEN=$(token)" >> $HOME/redelivre/install/.env
+echo "TELEGRAM_ADMINS=$admins" >> $HOME/redelivre/install/.env
 
 echo "Type a openid id for your telegram bot [ENTER]:"
 read openid_id
-echo "openid_id=$(openid_id)" >> $HOME/redelivre/install/.env
-
+echo "openid_id=$openid_id" >> $HOME/redelivre/install/.env
 
 echo "Type a openid secret for your telegram bot [ENTER]:"
 read openid_secret
-echo "openid_id=$(openid_secret)" >> $HOME/redelivre/install/.env
-
-echo "Type 3 admins for your telegram bot, followed by '+' [ENTER]:"
-read admins
-echo "TELEGRAM_ADMINS=$(admins)" >> $HOME/redelivre/install/.env
+echo "openid_id=$openid_secret" >> $HOME/redelivre/install/.env
 
 echo "assistente_secret=$(cat /proc/sys/kernel/random/uuid)" >> $HOME/redelivre/install/.env
+
+make redelivre
 
 exit 0
