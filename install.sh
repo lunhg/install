@@ -38,7 +38,7 @@ done
 
 cd $HOME/redelivre/install \
     && git remote add gitlab git@gitlab.com:install/install.git \
-    && git fetch --all && git pull gitlab dev
+    && git fetch --all && git pull $REMOTE $BRANCH
     
 # Configure a .env file
 for i "username=$(echo whoami)" "apk_dependencies=sudo make git" "TRAVIS_LOCAL=senhasupersecreta" "NODE_ENV=10.11.0" "redisUI=redis.$(echo hostname)" "wordpress=wp.$(echo hostname)" "loginCidadao=lc.$(echo hostname)" "minio=s3.$(echo hostname)" "adminer=adminer.$(echo hostname)" "phpmyadmin=phpmyadmin.$(echo hostname)" "smtp=smtp.$(echo hostname)" "elk=elk.$(echo hostname)" "traefik=lb.$(echo hostname)" "tgbot=tgbot.$(echo hostname)" "api=api.tgbot.$(echo hostname)" "assistente_node_env=production" "assistente_port=3000" "assistente_redis_host=$(echo hostname)" "assistente_redis_port=6379" "assistente_redis_db=0" "assistente_jwt_issuer=feathers-plus" "assistente_jwt_audience=https://api.tgbot.$(echo hostname)" "assistente_session_name=ASSISTENTE-JWT" ; do echo $i >> $HOME/redelivre/install/.env ; done
