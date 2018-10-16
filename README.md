@@ -95,6 +95,12 @@ Supõe a presença de um dos comandos listados abaixo:
   $ curl --cookie "_gitlab_session=<meucookiegitlab*>" -o- https://gitlab.com/install/install/raw/dev/install.sh | bash
   ```
   
+  Este mesmo comando pode ser customizado com as seguintes modificações:
+  
+  ```
+  $ DOCKER_VERSION=<X.Y.Z> DOCKER_COMPOSE_VERSION=<X.Y.Z> REMOTE='<origin|lunhg|gitlab|...> BRANCH='<master|dev|...>' curl --cookie "_gitlab_session=<meucookiegitlab*>" -o- https://gitlab.com/install/install/raw/dev/install.sh | bash
+  ```
+  
 _* Um cookie gitlab pode ser encontrado no google chrome; para acessá-lo, esteja logado no gitlab, clique no cadeado verde ao lado da caixa de URI, e procure pelo cookie referente à sua sessão atual gitlab_
 
 ## Desenvolvedores
