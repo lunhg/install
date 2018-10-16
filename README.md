@@ -3,43 +3,91 @@
 Installe a redelivre en su computador hoje ! we ♥ DX
 [![Join the chat at https://telegram.me/IdentidadeDigital](https://patrolavia.github.io/telegram-badge/chat.png)](https://t.me/RedeLivreOrg)
 
+
+# Sumário
+
+ - O que é este repositório? 
+   - Infraestrutura da #Redelivre
+ -
+ 
+# O que é este repositório
+
+Este repositório é uma suíte de _softwares_ desenvolvidos pela comunidade #Redelivre.
+
 ## Infraestrutura da #RedeLivre
 
-Essa etapa tentar garantir aos desenvolvedores instalarem a Rede Livre em seu próprio computador. Para isso, algumas dependências obrigatórias são necessárias: o [Docker](https://rancher.com/docs/rancher/v1.6/en/hosts/#supported-docker-versions), o [Docker Compose](https://github.com/docker/compose/releases/tag/1.22.0) e o Make.
+Essa etapa tentar garantir aos desenvolvedores instalarem a Rede Livre em seu próprio computador. Para isso, algumas dependências obrigatórias são necessárias: 
+  
+  - [Docker](https://rancher.com/docs/rancher/v1.6/en/hosts/#supported-docker-versions);
+  - [Docker Compose](https://github.com/docker/compose/releases/tag/1.22.0);
+  - [Make](https://pt.wikipedia.org/wiki/Make)
 
-A Rede Livre é, por enquanto, formada por 3 produtos principais: [Login Cidadão](https://github.com/redelivre/login-cidadao), [Mapas Culturais](https://github.com/hacklabr/mapasculturais) e [Wordpress](https://github.com/redelivre/2.0).
+## Suíte install
+
+A Rede Livre é, por enquanto, formada por 3 produtos principais: 
+  
+  - [Login Cidadão](https://github.com/redelivre/login-cidadao);
+  - [Mapas Culturais](https://github.com/hacklabr/mapasculturais); 
+  - [Wordpress](https://github.com/redelivre/2.0);
+  
+De forma adicional, adicionamos no [_branch_](https://git-scm.com/book/pt-br/v1/Ramifica%C3%A7%C3%A3o-Branching-no-Git-O-que-%C3%A9-um-Branch) [dev](https://github.com/lunhg/install/tree/dev) mais 5 produtos, ainda em fase de desenvolvimento, e portanto, sujeitos a possíveis instabilidades e malfuncionamento:
+
+  - [alpine](https://gitlab.com/install/alpine);
+    - Imagem customizavel para execução de OS enxuto;
+  - [alpine-node](https://gitlab.com/install/alpine-node);
+    - Imagem customizavel para execução de OS enxuto com node.js (versão 10);
+  - [alpine-redis](https://gitlab.com/install/alpine-redis);
+    - Imagem customizável para execução de OS enxuto com redis;
+  - [tg-bot](https://gitlab.com/install/tg-bot);
+    - Bot telegram em node.js e redis;
+    - deve acompanhar [tg-bot-commands](https://gitlab.com/install/tg-bot-commands); 
+  - [assistente](https://gitlab.com/install/assistente)
+    - API de gerenciamento de  multiplos robos e seus comandos;
+
+# Instalação
+
+## Rápido (sujeito a bugs):
+  
+  - Executar o arquivo de instalação pelo [curl](https://pt.wikipedia.org/wiki/Curl):
+  ```
+  $ curl -o- https://raw.githubusercontent.com/lunhg/install/blob/dev/install.sh | bash
+  ```
+  
+  - ou [wget](https://pt.wikipedia.org/wiki/Wget):
+  ```
+  wget -qO- https://raw.githubusercontent.com/lunhg/install/blob/dev/install.sh | bash
+  ```
+
+## Desenvolvedores
+
+### Clone
+
+Este repositório e adicione forks (opcional para desenvolvedores) na:
 
 
-Para instalar o docker, experimente executar o seguinte comando:
-
-```bash
-curl https://releases.rancher.com/install-docker/18.03.sh | sh
+```
+# Repositório principal e forks
+$ mkdir $HOME/redelivre
+$ git clone https://www.github.com/redelivre/install $HOME/redelivre/install
+$ git remote add lunhg https://www.github.com/lunhg/install
+$ git remote add gitlab git@gitlab.com:install/install.git 
 ```
 
-Em seguida, adicione ao seu host as seguintes linhas:
+### Execute
 
-```bash
-127.0.0.1 mapas.redelivre
-127.0.0.1 lc.redelivre
-127.0.0.1 redelivre
-127.0.0.1 smtp.redelivre s3.redelivre elk.redelivre phpmyadmin.redelivre redelivre lb.redelivre adminer.redelivre
+O_script_ `install.sh`:
+
+```
+$ chown +x install.sh
+$ ./install.sh
 ```
 
-E então, execute o comando:
+## Pós- instalção
 
-```bash
-mkdir redelivre && cd redelivre
-git clone https://github.com/redelivre/install
-git clone --single-branch -b feature/docker-simplified https://github.com/redelivre/login-cidadao
-git clone --single-branch -b feature/dockerfile-simplified https://github.com/redelivre/mapasculturais
-git clone https://github.com/redelivre/2.0 wordpress
-cd install
-make redelivre
-```
-
-Subirão alguns serviços depois de 120 minutos, dependendo da conexão com a internet e do processador do computador. As urls adicionadas ao host estarão funcionando correntamente, se tudo deu certo no build.
+O _script_ `install.sh`executará, ao fim de suas ações, a receita `redelivre` do programa `Make`, cuja ação principal é subir alguns serviços depois de 120 minutos, dependendo da conexão com a internet e do processador do computador. As urls adicionadas ao host estarão funcionando correntamente, se tudo deu certo no build.
 
 Caso ocorra algum problema, execute o comando:
+
 
 ```bash
 make status
@@ -109,4 +157,7 @@ $ docker rm $(docker ps -aq)
 
 # Delete all images
 $ docker rmi $(docker images -q)
+
+# Delete all "<tagged>" images
+$ docker rmi $(docker images | grep "^<tagged>" | awk "{ print $3}")
 ```

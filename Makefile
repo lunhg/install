@@ -31,11 +31,30 @@ app_wp_migrations:
 	docker-compose exec app_wp wp --allow-root core install  --path=./web/wp --url=https://redelivre --title=teste-redelivre --admin_user=root --admin_password=123 --skip-email --admin_email=teste@teste.com
 	docker-compose exec app_wp wp --allow-root plugin activate wpro
 
-start:
-	docker-compose up -d app_lc web_lc
-	docker-compose up -d app_mc web_mc
-	docker-compose up -d app_wp web_wp
-	docker-compose up -d traefik
+lc:
+	docker-compose up --build -d --remove-orphans app_lc web_lc
+
+mc:
+	docker-compose up --build -d --remove-orphans app_mc web_mc
+
+wp:
+	docker-compose up --build -d --remove-orphans web_wp
+
+traefik:
+	docker-compose up --build -d --remove-orphans traefik
+
+alpine:
+	docker-compose up --build -d --remove-orphans alpine
+
+rd:
+	docker-compose up --build -d --remove-orphans __redis__ redis redisAdmin redisUI 
+
+nd:
+	docker-compose up --build -d --remove-orphans __node__ tg_bot assistente_api
+
+build: lc mc wp alpine nd rd
+
+start: build
 
 stop:
 	@echo "Stopping your project..."
@@ -43,7 +62,7 @@ stop:
 
 destroy: stop
 	@echo "Deleting all containers..."
-	docker-compose down --rmi all --remove-orphans
+	docker-compose down --rmi all 
 
 upgrade:
 	@echo "Upgrading your project..."
@@ -95,12 +114,12 @@ urls:
 	@echo "Servidor S3:        http://s3.redelivre/"
 	@echo "PHPMyAdmin:         http://phpmyadmin.redelivre/"
 	@echo "Adminer:            http://adminer.redelivre/"
+	@echo "Telegram bot:       http://tg.redelivre/"
 	@echo ""
 	@echo "-------------------------------------------------"
 
 clean:
 	@docker-compose down -v --remove-orphans
-
 
 status:
 	docker-compose ps
