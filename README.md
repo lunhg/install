@@ -1,14 +1,19 @@
 # Rede Livre Install
 
-Installe a redelivre en su computador hoje ! we ♥ DX
+Installe a `#redelivre` en su computador hoje ! we ♥ DX
 [![Join the chat at https://telegram.me/IdentidadeDigital](https://patrolavia.github.io/telegram-badge/chat.png)](https://t.me/RedeLivreOrg)
 
 
 # Sumário
 
  - O que é este repositório? 
-   - Infraestrutura da #Redelivre
- -
+   - Infraestrutura da `#redelivre`
+   - Suíte install
+ - Instalação
+   - Rápido
+   - Desenvolvedores
+    - Clone
+    - Crie um arquivo `.env`
  
 # O que é este repositório
 
@@ -123,9 +128,7 @@ openid_secret=<segredo_openid>
 
 ```
 
-### Execute
-
-O_script_ `install.sh`:
+### Execute `./install.sh`
 
 ```
 $ chown +x install.sh
@@ -134,10 +137,29 @@ $ ./install.sh
 
 ## Pós- instalção
 
-O _script_ `install.sh`executará, ao fim de suas ações, a receita `redelivre` do programa `Make`, cuja ação principal é compilar imagens customizadas, configurar e subir serviços, de maneira automática, na sua máquina local, ou servidor remoto, o que pode levar mais de 120 minutos, dependendo da conexão com a internet e do processador do computador. 
+O _script_ `./install.sh` executará:
+
+- Verificação na máquina local pela existência do _software_ docker (e instalação, se necessário);
+- Verificação na máquina local pela existência do _software_ docker-compose (e instalação, se necessário)
+- Verificação na máquina local pela existência dos repositórios que incluem a suíte `#redelivre` (_download_, se necessário);
+- Execução da receita `redelivre` do programa `Make`, cuja ações são:
+  - Compilar imagens customizadas;
+  - baixar imagens já distribuídas no [hub.docker.com](https://hub.docker.com/),
+  - configurar e subir serviços
+
+### Estimativa de tempo
+
+Esse processo pode levar mais de 120 minutos, dependendo da conexão com a internet e do processador do computador. 
+
+### Urls de acesso
 
 As urls adicionadas ao host estarão funcionando correntamente, se tudo deu certo no build.
 
+``` 
+$ make urls
+```
+
+### 
 Caso ocorra algum problema, execute o comando:
 
 
