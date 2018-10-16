@@ -1,7 +1,10 @@
+
 #!/bin/sh
 
 export DOCKER_VERSION='18.03'
 export DOCKER_COMPOSE_VERSION='1.22.0'
+REMOTE='gitlab'
+BRANCH='dev'
 
 if [ ! `which docker` == '/usr/bin/docker' ] ; then
     curl https://releases.rancher.com/install-docker/${DOCKER_VERSION}.sh | sh
@@ -34,5 +37,9 @@ for url in "alpine" "alpine-node" "alpine-redis" "redis-ui" "tg-bot" "tg-bot-com
     fi
 done
 
-cd $HOME/redelivre/install && make redelivre
+cd $HOME/redelivre/install \
+    && git remote add lunhg https://github.com/lunhg/install.git \
+    && git remote add gitlab git@gitlab.com:install/install.git \
+    && git fetch --all && git pull $REMOTE $BRANCH \
+    && make redelivre
 exit 0
