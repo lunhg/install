@@ -58,14 +58,12 @@ De forma adicional, adicionamos no [_branch_](https://git-scm.com/book/pt-br/v1/
 Supõe a presença de um dos comandos listados abaixo:
 
   - Executar o arquivo de instalação pelo [curl](https://pt.wikipedia.org/wiki/Curl):
+  
   ```
-  $ curl -o- https://gitlab.com/install/install/raw/dev/install.sh | bash
+  $ curl --cookie="_gitlab_session=<meucookiegitlab*>"-o- https://gitlab.com/install/install/raw/dev/install.sh | bash
   ```
   
-  - ou [wget](https://pt.wikipedia.org/wiki/Wget):
-  ```
-  wget -qO- https://gitlab.com/install/install/raw/dev/install.sh | bash
-  ```
+_* Um cookie gitlab pode ser encontrado no google chrome; para acessá-lo, esteja logado no gitlab, clique no cadeado verde ao lado da caixa de URI, e procure pelo cookie referente à sua sessão atual gitlab_
 
 ## Desenvolvedores
 
