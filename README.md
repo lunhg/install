@@ -9,8 +9,10 @@ Installe a `#redelivre` en su computador hoje ! we ♥ DX
  - O que é este repositório? 
    - Infraestrutura da `#redelivre`
    - Suíte install
+ - Chaves `ssh`
  - Instalação
    - Rápido
+     - Configure o arquivo `.env` 
    - Desenvolvedores
     - Clone
     - Crie um arquivo `.env`
@@ -18,6 +20,7 @@ Installe a `#redelivre` en su computador hoje ! we ♥ DX
 # O que é este repositório
 
 Este repositório é uma suíte de _softwares_ desenvolvidos pela comunidade #Redelivre.
+
 
 ## Infraestrutura da #RedeLivre
 
@@ -49,6 +52,35 @@ De forma adicional, adicionamos no [_branch_](https://git-scm.com/book/pt-br/v1/
   - [assistente](https://gitlab.com/install/assistente)
     - API de gerenciamento de  multiplos robos e seus comandos;
 
+# Chaves `ssh`
+
+Dentre os _softwares_ que constituem a suíte `#redelivre`, alguns estão localizados no [gitlab](https://gitlab.com/install).
+Para habilitar clonagens e updates com o mínimo de digitação de senhas e maior flexibilidade e segurança para servidores remotos, 
+uma chave `ssh` deve ser gerada:
+
+```
+$ ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/<user>/.ssh/id_rsa): /home/<user>/.ssh/gitlab
+****
+```
+
+Copie a chave pública correspondente e crie-a em suas configurações de acesso remoto do [gitlab](https://gitlab.com/profile/keys).
+
+```
+$ cat ~/.ssh/gitlab
+<chave_publica>
+```
+
+Agora habilite  acesso remoto com `ssh`:
+
+```
+$ eval $(ssh-agent -s) && ssh-add ~/.ssh/gitlab
+Agent pid <pid>
+Enter passphrase for /home/<user>/.ssh/gitlab: 
+****
+```
+
 # Instalação
 
 
@@ -69,7 +101,7 @@ _* Um cookie gitlab pode ser encontrado no google chrome; para acessá-lo, estej
 
 ### Clone
 
-Este repositório e adicione forks (opcional para desenvolvedores) na:
+Este repositório e adicione forks (opcional para desenvolvedores):
 
 
 ```
