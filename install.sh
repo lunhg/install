@@ -8,16 +8,34 @@ REDELIVRE_PATH=${REDELIVRE_PATH:='$HOME/redelivre'}
 hasDocker=`echo $(which docker)`
 hasDockerCompose=`echo $(which docker-compose)`
 
+echo "
+                                                                           
+,------. ,------.,------.  ,------.,--.   ,--.,--.   ,--.,------. ,------. 
+|  .--. '|  .---'|  .-.  \ |  .---'|  |   |  | \  `.'  / |  .--. '|  .---' 
+|  '--'.'|  `--, |  |  \  :|  `--, |  |   |  |  \     /  |  '--'.'|  `--,  
+|  |\  \ |  `---.|  '--'  /|  `---.|  '--.|  |   \   /   |  |\  \ |  `---. 
+`--' '--'`------'`-------' `------'`-----'`--'    `-'    `--' '--'`------' 
+                                                                           
+"
+echo "===> Configuring docker $DOCKER_VERSION"
+echo "===> Configuring docker-compose $DOCKER_COMPOSE_VERSION"
+echo "===> Configuring remote $REMOTE"
+echo "===> Configuring branch $BRANCH"
+echo "===> Configuring prefix $REDELIVRE_PATH"
+
 # Check if docker and docker-compose exists
 if [ ! -n $hasDocker ] ; then
+    echo "==> Installing docker"
     curl https://releases.rancher.com/install-docker/${DOCKER_VERSION}.sh | sh
 fi
 
 if [ ! -n $hasDockerCompose ] ; then
+    echo "==> Installing docker-compose"
     sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 fi
 
 if [ ! -d $REDELIVRE_PATH ] ; then
+    echo "==> Creating $REDELIVRE_PATH"
     mkdir -p $REDELIVRE_PATH
 fi
 
