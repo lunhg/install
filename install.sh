@@ -69,23 +69,20 @@ done
 # Configure a .env file
 for i in "username=$(whoami)" "apk_dependencies=sudo make git" "TRAVIS_LOCAL=senhasupersecreta" "NODE_ENV=10.11.0" "redisUI=redis.$(hostname)" "wordpress=wp.$(hostname)" "loginCidadao=lc.$(hostname)" "minio=s3.$(hostname)" "adminer=adminer.$(hostname)" "phpmyadmin=phpmyadmin.$(hostname)" "smtp=smtp.$(hostname)" "elk=elk.$(hostname)" "traefik=lb.$(hostname)" "tgbot=tgbot.$(hostname)" "api=api.tgbot.$(hostname)" "assistente_node_env=production" "assistente_port=3000" "assistente_redis_host=$(hostname)" "assistente_redis_port=6379" "assistente_redis_db=0" "assistente_jwt_issuer=feathers-plus" "assistente_jwt_audience=https://api.tgbot.$(hostname)" "assistente_session_name=ASSISTENTE-JWT" ; do echo $i >> $REDELIVRE_PATH/install/.env ; done
 
-echo "Type a name for your telegram bot [ENTER]:"
-eval read name && echo "TELEGRAM_NAME=$name" >> $REDELIVRE_PATH/install/.env
 
-echo "Type a token for your telegram bot [ENTER]:"
-eval read token && echo "TELEGRAM_TOKEN=$token" >> $REDELIVRE_PATH/install/.env
-
-echo "Type 3 admins for your telegram bot, followed by '+' [ENTER]:"
-eval read admins && echo "TELEGRAM_ADMINS=$admins" >> $REDELIVRE_PATH/install/.env
-
-echo "Type a openid id for your telegram bot [ENTER]:"
-eval read openid_id && echo "openid_id=$openid_id" >> $REDELIVRE_PATH/install/.env
-
-echo "Type a openid secret for your telegram bot [ENTER]:"
-eval read openid_secret && echo "openid_id=$openid_secret" >> $REDELIVRE_PATH/install/.env
+for i in "telegram_name" "telegram_token" "telegram_admins" "openid_id" "openid_secret" ; do
+    if [ ! -n ${!i} ] ; then
+        echo "==> ${!i} not declared"
+        exit 1
+    fi
+    if [ -n $i ] ; then
+        echo "$i=${!i}" >> $REDELIVRE_PATH/install/.env
+    fi
+done
 
 echo "assistente_secret=$(cat /proc/sys/kernel/random/uuid)" >> $REDELIVRE_PATH/install/.env
 
-eval make redelivre
+# Make redelivre
+make redelivre
 
 exit 0
