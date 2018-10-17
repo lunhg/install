@@ -39,7 +39,7 @@ if [ ! -d $REDELIVRE_PATH ] ; then
 fi
 
 # wordpress
-if [ ! -d $REDELIVRE_PATH/wordpress ] ;
+if [ ! -d $REDELIVRE_PATH/wordpress ] ; then
     git clone "https://www.github.com/redelivre/2.0" $REDELIVRE_PATH/wordpress
 fi
 
