@@ -4,7 +4,8 @@ DOCKER_VERSION=${DOCKER_VERSION:='18.03'}
 DOCKER_COMPOSE_VERSION=${DOCKER_COMPOSE_VERSION:='1.22.0'}
 REMOTE=${REMOTE:='gitlab'}
 BRANCH=${BRANCH:='dev'}
-REDELIVRE_PATH=${REDELIVRE_PATH:='/home/$(whoami)/redelivre'}
+HOME=${HOME:=/home/$(whoami)}
+REDELIVRE_PATH=${REDELIVRE_PATH:=$HOME/redelivre}
 hasDocker=`echo $(which docker)`
 hasDockerCompose=`echo $(which docker-compose)`
 
