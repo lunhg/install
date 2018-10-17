@@ -4,7 +4,7 @@ DOCKER_VERSION=${DOCKER_VERSION:='18.03'}
 DOCKER_COMPOSE_VERSION=${DOCKER_COMPOSE_VERSION:='1.22.0'}
 REMOTE=${REMOTE:='gitlab'}
 BRANCH=${BRANCH:='dev'}
-SSH_FILE=${SSH_FILE='$HOME/.ssh/install'}
+SSH_FILE=${SSH_FILE:='$HOME/.ssh/install'}
 
 
 eval $(ssh-agent -s) && ssh-add $SSH_FILE
