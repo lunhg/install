@@ -84,6 +84,7 @@ done
 echo "assistente_secret=$(cat /proc/sys/kernel/random/uuid)" >> $REDELIVRE_PATH/install/.env
 
 # Make redelivre
+cd $REDELIVRE_PATH/install
 make --makefile $REDELIVRE_PATH/install/Makefile redelivre
-
+cd -
 exit 0
