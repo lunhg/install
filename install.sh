@@ -56,7 +56,8 @@ cd $HOME/redelivre/install \
     && git remote add lunhg https://www.github.com/lunhg/install.git \
     && git remote add gitlab git@gitlab.com:install/install.git \
     && git fetch --all \
-    && git pull $REMOTE $BRANCH
+    && git pull $REMOTE $BRANCH \
+    && git checkout dev
 
 cd -
 
