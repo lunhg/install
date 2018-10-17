@@ -1,6 +1,6 @@
 #!/bin/sh
 
-DOCKER_VERSION=${DOCKER_VERSION:='18.03'}
+DOCKER_VERSION=${DOCKER_VERSION:='18.06'}
 DOCKER_COMPOSE_VERSION=${DOCKER_COMPOSE_VERSION:='1.22.0'}
 REMOTE=${REMOTE:='gitlab'}
 BRANCH=${BRANCH:='dev'}
@@ -84,6 +84,6 @@ done
 echo "assistente_secret=$(cat /proc/sys/kernel/random/uuid)" >> $REDELIVRE_PATH/install/.env
 
 # Make redelivre
-make redelivre
+make --makefile $REDELIVRE_PATH/install redelivre
 
 exit 0
