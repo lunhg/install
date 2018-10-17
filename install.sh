@@ -78,7 +78,7 @@ for i in "telegram_name" "telegram_token" "telegram_admins" "openid_id" "openid_
         exit 1
     fi
     if [ -n $i ] ; then
-        echo "$i=${!i}" >> $REDELIVRE_PATH/install/.env
+        echo $i'='${!i} >> $REDELIVRE_PATH/install/.env
     fi
 done
 
