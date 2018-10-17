@@ -52,6 +52,7 @@ done
 
 # Add repos to install/
 cd $HOME/redelivre/install \
+    && git config user.name "$(whoami)" \
     && git remote add lunhg https://www.github.com/lunhg/install.git \
     && git remote add gitlab git@gitlab.com:install/install.git \
     && git fetch --all \
