@@ -24,7 +24,7 @@ fi
 # wordpress
 if [ ! -d $REDELIVRE_PATH/wordpress ] ;
     git clone "https://www.github.com/redelivre/2.0" $REDELIVRE_PATH/wordpress
-fi;
+fi
 
 # Install github repos
 for url in "install" "login-cidadao" "mapasculturais";  do
