@@ -117,6 +117,7 @@ services:
         networks:
             rl:
 
+    # git@gitlab:install/alpine-redis.git
     redis:
         extends:
             file: ../alpine-redis/docker-compose.yml
@@ -148,6 +149,7 @@ services:
             - __redis__
             - redis
     
+    # UI for redis
     redisUI:
         extends:
             file: ../redis-ui/docker-compose.yml
@@ -171,9 +173,9 @@ services:
             - redisAdmin
 
     
-    # ==============
-    # WEB -WORDPRESS (MAIN SITE)
-    # ==============
+    # ===
+    # WEB 
+    # ===
 
     # https://github.com.dev.org.br/login-cidadao
     app_lc:
@@ -193,6 +195,32 @@ services:
             - redis
             - memcached
             - smtp
+        networks:
+            rl:
+
+    # https://github.com/hacklabr/mapasculturais
+    app_mc:
+        image: redelivre/mapasculturais
+        build:
+            context: ../mapasculturais/
+            args:
+                TIMEZONE: "America/Sao_Paulo"
+        volumes:
+            # - ../mapasculturais/:/var/www/html/
+            - ./logs/app_mc/:/var/www/html/src/protected/logs
+        environment:
+            MAILER_SERVER: smtp
+            MAILER_PORT: 8045
+            SLIM_DEBUG: 'true'
+            MAPASCULTURAIS_CONFIG_FILE: config.php
+            DB_PASS: senhaMapas
+            DB_USER: mapas
+            DB_NAME: mapas
+            DB_HOST: postgres
+        links:
+            - postgres
+        depends_on:
+            - postgres
         networks:
             rl:
 
@@ -224,6 +252,42 @@ services:
         networks:
             rl:
 
+    web_lc:
+        image: redelivre/login-cidadao-nginx
+        build: lc/web
+        ports:
+            - 83:80
+            - 436:443
+        depends_on:
+            - app_lc
+        volumes:
+            - ./logs/web_lc/:/var/log/nginx
+        labels:
+            traefik.frontend.rule: Host:$loginCidadao
+            traefik.port: '80'
+            traefik.enable: 'true'
+            traefik.alias: lc
+        networks:
+            rl:
+
+    web_mc:
+        image: redelivre/mapasculturais-nginx
+        build: mc/web
+        ports:
+            - 82:80
+            - 435:443
+        depends_on:
+            - app_mc
+        volumes:
+            - ./logs/web_mc/:/var/log/nginx
+        labels:
+            traefik.frontend.rule: Host:mc.redelivre
+            traefik.port: '80'
+            traefik.enable: 'true'
+            traefik.alias: mc
+        networks:
+            rl:
+    
     web_wp:
         image: redelivre/wordpress-nginx
         build: wp/web
@@ -247,24 +311,6 @@ services:
             traefik.frontend.rule: Host:$wordpress
             traefik.port: '80'
             traefik.enable: 'true'
-        networks:
-            rl:
-
-    web_lc:
-        image: redelivre/login-cidadao-nginx
-        build: lc/web
-        ports:
-            - 83:80
-            - 436:443
-        depends_on:
-            - app_lc
-        volumes:
-            - ./logs/web_lc/:/var/log/nginx
-        labels:
-            traefik.frontend.rule: Host:$loginCidadao
-            traefik.port: '80'
-            traefik.enable: 'true'
-            traefik.alias: lc
         networks:
             rl:
 
@@ -389,15 +435,15 @@ services:
         ports:
             - "3030:3000"
         environment:
-            - "PORT=3000"
-            - "redis_host=dev.org.br"
-            - "redis_port=6379"
-            - "redis_db=0"
+            - "PORT='3000'"
+            - "redis_host=$assistente_redis_host"
+            - "redis_port=$assistente_redis_port"
+            - "redis_db=$assistente_redis_db"
         labels:
-            traefik.docker.network: rl
-            traefik.frontend.rule: Host:$tgbot
-            traefik.port: '3000'
-            traefik.enable: 'true'
+            - "traefik.docker.network=rl"
+            - "traefik.frontend.rule=Host:$tgbot"
+            - "traefik.port='3000'"
+            - "traefik.enable='true'"
         depends_on:
             - alpine
             - __node__
@@ -416,8 +462,6 @@ services:
         depends_on:
             - alpine
             - __node__
-            - tg_bot
-
 # =======
 # VOLUMES
 # =======
