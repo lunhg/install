@@ -87,20 +87,35 @@ Enter passphrase for /home/<user>/.ssh/gitlab:
 ## Rápido (sujeito a bugs):
 
 
-Supõe a presença de um dos comandos listados abaixo:
+Supõe a presença de um do [curl](https://pt.wikipedia.org/wiki/Curl):
 
-  - Executar o arquivo de instalação pelo [curl](https://pt.wikipedia.org/wiki/Curl):
-  
   ```
-  $ curl --cookie "_gitlab_session=<meucookiegitlab*>" -o- https://gitlab.com/install/install/raw/dev/install.sh | bash
+  $ DOCKER_VERSION=<X.Y.Z> \
+    DOCKER_COMPOSE_VERSION=<X.Y.Z> \
+    REMOTE='<origin|lunhg|gitlab|...> \
+    BRANCH='<master|dev|...>' \
+    telegram_name='<botname>' \
+    telegram_token=<token> \
+    telegram_admins='12345+23456+345' \
+    openid_id=<id> \
+    openid_secret=<secret> \
+    curl --cookie "_gitlab_session=<meucookiegitlab*>" -o- https://gitlab.com/install/install/raw/dev/install.sh | bash
   ```
-  
-  Este mesmo comando pode ser customizado com as seguintes modificações:
-  
+
+As variáveis com letras maiúsculas indicam valores que possuem um valor padrão (_default_). 
+
+Já as variáveis em letras minúsculas atestam variáveis únicas e devem ser mantidas em segredo, de forma que uma forma enxuta
+do comando acima pode ser:
+
+```
+  $ telegram_name='<botname>' \
+    telegram_token=<token> \
+    telegram_admins='12345+23456+345' \
+    openid_id=<id> \
+    openid_secret=<secret> \
+    curl --cookie "_gitlab_session=<meucookiegitlab*>" -o- https://gitlab.com/install/install/raw/dev/install.sh | bash
   ```
-  $ DOCKER_VERSION=<X.Y.Z> DOCKER_COMPOSE_VERSION=<X.Y.Z> REMOTE='<origin|lunhg|gitlab|...> BRANCH='<master|dev|...>' curl --cookie "_gitlab_session=<meucookiegitlab*>" -o- https://gitlab.com/install/install/raw/dev/install.sh | bash
-  ```
-  
+
 _* Um cookie gitlab pode ser encontrado no google chrome; para acessá-lo, esteja logado no gitlab, clique no cadeado verde ao lado da caixa de URI, e procure pelo cookie referente à sua sessão atual gitlab_
 
 ## Desenvolvedores
