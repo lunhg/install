@@ -69,7 +69,7 @@ for url in "alpine" "alpine-node" "alpine-redis" "redis-ui" "tg-bot" "tg-bot-com
 done
 
 # Configure a .env file
-for i in "username=$(whoami)" "apk_dependencies=sudo make git" "TRAVIS_LOCAL=senhasupersecreta" "NODE_ENV=10.11.0" "redisUI=redis.$(hostname)" "wordpress=wp.$(hostname)" "loginCidadao=lc.$(hostname)" "minio=s3.$(hostname)" "adminer=adminer.$(hostname)" "phpmyadmin=phpmyadmin.$(hostname)" "smtp=smtp.$(hostname)" "elk=elk.$(hostname)" "traefik=lb.$(hostname)" "tgbot=tgbot.$(hostname)" "api=api.tgbot.$(hostname)" "assistente_node_env=production" "assistente_port=3000" "assistente_redis_host=$(hostname)" "assistente_redis_port=6379" "assistente_redis_db=0" "assistente_jwt_issuer=feathers-plus" "assistente_jwt_audience=https://api.tgbot.$(hostname)" "assistente_session_name=ASSISTENTE-JWT" ; do echo $i >> $REDELIVRE_PATH/install/.env ; done
+for i in "username=$(whoami)" "apk_dependencies=sudo make git" "TRAVIS_LOCAL=senhasupersecreta" "NODE_ENV=10.11.0" "redisUI=redis.$(hostname)" "wordpress=$(hostname)" "loginCidadao=lc.$(hostname)" "minio=s3.$(hostname)" "adminer=adminer.$(hostname)" "phpmyadmin=phpmyadmin.$(hostname)" "smtp=smtp.$(hostname)" "elk=elk.$(hostname)" "traefik=lb.$(hostname)" "tgbot=tgbot.$(hostname)" "api=api.tgbot.$(hostname)" "assistente_node_env=production" "assistente_port=3000" "assistente_redis_host=$(hostname)" "assistente_redis_port=6379" "assistente_redis_db=0" "assistente_jwt_issuer=feathers-plus" "assistente_jwt_audience=https://api.tgbot.$(hostname)" "assistente_session_name=ASSISTENTE-JWT" ; do echo $i >> $REDELIVRE_PATH/install/.env ; done
 
 
 for i in "telegram_name" "telegram_token" "telegram_admins" "openid_id" "openid_secret" ; do
