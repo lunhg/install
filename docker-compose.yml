@@ -1,5 +1,4 @@
-
-######
+ ######
  #     #  ######  #####   ######  #       #  #    #  #####   ###### 
  #     #  #       #    #  #       #       #  #    #  #    #  #       
  ######   #####   #    #  #####   #       #  #    #  #    #  #####  
@@ -32,6 +31,7 @@ networks:
 
 # Serviços:
 # - imagens de base
+
 # - web
 # - bases de dados
 services:
@@ -71,8 +71,6 @@ services:
         extends:
             file: ../alpine-node/docker-compose.yml
             service: node
-        environment:
-            - "username=$username"
         depends_on:
             - alpine
 
@@ -82,7 +80,7 @@ services:
     postgres:
         restart: always
         environment:
-            POSTGRES_PASSWORD: senhaMapas
+            POSTGRES_PASSWORD: $postgres_pwd
             POSTGRES_USER: mapas
             POSTGRES_DB: mapas
             POSTGRES_DB_TEST: mapasculturais_test
@@ -108,10 +106,10 @@ services:
         ports:
             - "3306:3306"
         environment:
-            MYSQL_ROOT_PASSWORD: 11111
+            MYSQL_ROOT_PASSWORD: $mariadb_root_pwd
             MYSQL_DATABASE: wp 
             MYSQL_USER: wp
-            MYSQL_PASSWORD: password
+            MYSQL_PASSWORD: $mariadb_pwd
         volumes:
             - mysql_data:/var/lib/mysql
         networks:
@@ -139,7 +137,7 @@ services:
         extends:
             file: ../alpine-redis/docker-compose.yml
             service: cli
-        command: set "admin.$username.pwd" $username
+        command: set "admin.$username.pwd" $redis_admin
         volumes:
             - alpine_run:/var/run
             - alpine_log:/var/log
@@ -161,7 +159,7 @@ services:
             - alpine_home:/home/$username
         labels: 
             traefik.docker.network: rl
-            traefik.frontend.rule: Host:$redisUI
+            traefik.frontend.rule: Host:$redis
             traefik.port: '3000'
             traefik.enable: 'true'
 
@@ -206,14 +204,14 @@ services:
             args:
                 TIMEZONE: "America/Sao_Paulo"
         volumes:
-            # - ../mapasculturais/:/var/www/html/
+            - ../mapasculturais/:/var/www/html/
             - ./logs/app_mc/:/var/www/html/src/protected/logs
         environment:
             MAILER_SERVER: smtp
             MAILER_PORT: 8045
             SLIM_DEBUG: 'true'
             MAPASCULTURAIS_CONFIG_FILE: config.php
-            DB_PASS: senhaMapas
+            DB_PASS: $postgres_pwd
             DB_USER: mapas
             DB_NAME: mapas
             DB_HOST: postgres
@@ -239,16 +237,16 @@ services:
         volumes:
             - ../wordpress:/var/www/html/
             - ./logs/app_wp/:/var/log/nginx
-            # - /etc/php7/php.ini
+            - /etc/php7/php.ini
         environment:
             DB_NAME: wp
             DB_USER: root
-            DB_PASSWORD: 11111
+            DB_PASSWORD: $mariadb_root_pwd
             DB_HOST: mariadb
             DB_PREFIX: wp_
             WP_ENV: development
-            WP_HOME: https://dev.org.br
-            WP_SITEURL: https://dev.org.br/wp
+            WP_HOME: https://$wordpress
+            WP_SITEURL: https://$wordpress/wp
         networks:
             rl:
 
@@ -263,7 +261,7 @@ services:
         volumes:
             - ./logs/web_lc/:/var/log/nginx
         labels:
-            traefik.frontend.rule: Host:$loginCidadao
+            traefik.frontend.rule: Host:$lc
             traefik.port: '80'
             traefik.enable: 'true'
             traefik.alias: lc
@@ -281,7 +279,7 @@ services:
         volumes:
             - ./logs/web_mc/:/var/log/nginx
         labels:
-            traefik.frontend.rule: Host:mc.redelivre
+            traefik.frontend.rule: Host:$mc
             traefik.port: '80'
             traefik.enable: 'true'
             traefik.alias: mc
@@ -303,7 +301,7 @@ services:
         volumes_from:
             - app_wp
         environment:
-            VIRTUAL_HOST: dev.org.br
+            VIRTUAL_HOST: $wordpress
             VIRTUAL_PORT: 80
         # substitute hostname to nginx conf; syntax from here: https://github.com/docker-library/docs/issues/496#issuecomment-203003827
         command: /bin/sh -c "envsubst '$$VIRTUAL_HOST' < /etc/nginx/site.conf.template > /etc/nginx/site.conf && nginx -g 'daemon off;'"
@@ -317,8 +315,8 @@ services:
     s3:
         image: minio/minio
         environment:
-            MINIO_ACCESS_KEY: admin
-            MINIO_SECRET_KEY: password
+            MINIO_ACCESS_KEY: $s3_key
+            MINIO_SECRET_KEY: $s3_secret
         volumes:
             - s3_data:/data
         ports:
@@ -327,7 +325,7 @@ services:
             - server
             - /data
         labels:
-            traefik.frontend.rule: Host:$minio
+            traefik.frontend.rule: Host:$s3
             traefik.port: '9000'
             traefik.enable: 'true'
             traefik.alias: s3
@@ -361,7 +359,7 @@ services:
             PMA_HOST: mariadb
             PMA_PORT: 3306
             PMA_USER: root 
-            PMA_PASSWORD: 11111 
+            PMA_PASSWORD: $mariadb_root_pwd 
         labels:
             traefik.frontend.rule: Host:$phpmyadmin
             traefik.port: '80'
@@ -415,7 +413,7 @@ services:
             - /var/run/docker.sock:/var/run/docker.sock:ro
               #- "./lb/traefik.toml:/etc/traefik/traefik.toml"
         labels:
-            traefik.frontend.rule: Host:$traefik
+            traefik.frontend.rule: Host:$lb
             traefik.alias: traefik
             traefik.port: '8080'
             traefik.enable: 'true'
@@ -435,18 +433,20 @@ services:
         ports:
             - "3030:3000"
         environment:
-            - "PORT='3000'"
-            - "redis_host=$assistente_redis_host"
-            - "redis_port=$assistente_redis_port"
-            - "redis_db=$assistente_redis_db"
+            - "PORT=3000"
+            - "redis_host=$wordpress"
+            - "redis_port=$REDIS_PORT"
+            - "redis_db=$tg_api_redis_db"
         labels:
             - "traefik.docker.network=rl"
-            - "traefik.frontend.rule=Host:$tgbot"
-            - "traefik.port='3000'"
-            - "traefik.enable='true'"
+            - "traefik.frontend.rule=Host:$tg_bot"
+            - "traefik.port=3000"
+            - "traefik.enable=true"
         depends_on:
             - alpine
             - __node__
+        networks:
+            rl:
 
     assistente_api:
         extends:
@@ -456,12 +456,46 @@ services:
             - "3032:3000"
         labels:
             traefik.docker.network: rl
-            traefik.frontend.rule: Host:$api
+            traefik.frontend.rule: Host:$tg_api
             traefik.port: '3000'
             traefik.enable: 'true'
         depends_on:
             - alpine
             - __node__
+        networks:
+            rl:
+
+    www_selenium:
+        extends:
+            file: ../WebWhatsapp-Wrapper/docker-compose.yml
+            service: firefox
+        ports:
+            - "4444:4444"
+            - "5900:5900"
+        volumes:
+            - www_selenium:/dev/shm 
+        labels:
+            traefik.docker.network: rl
+            traefik.frontend.rule: Host:$www_selenium
+            traefik.port: '4444'
+            traefik.enable: 'true'
+        networks:
+            rl:
+
+
+    www_bot:
+        extends:
+            file: ../WebWhatsapp-Wrapper/docker-compose.yml
+            service: whatsapp
+        ports:
+            - "9200:9200"
+        labels:
+            traefik.docker.network: rl
+            traefik.frontend.rule: Host:$www_bot
+            traefik.port: '9200'
+            traefik.enable: 'true'
+        networks:
+            rl:
 # =======
 # VOLUMES
 # =======
@@ -475,4 +509,5 @@ volumes:
     alpine_run:
     alpine_log:
     redis_etc:
+    www_selenium:
 

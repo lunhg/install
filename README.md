@@ -26,9 +26,13 @@ Este repositório é uma suíte de _softwares_ desenvolvidos pela comunidade #Re
 
 Essa etapa tentar garantir aos desenvolvedores instalarem a Rede Livre em seu próprio computador. Para isso, algumas dependências obrigatórias são necessárias: 
   
-  - [Docker](https://rancher.com/docs/rancher/v1.6/en/hosts/#supported-docker-versions);
-  - [Docker Compose](https://github.com/docker/compose/releases/tag/1.22.0);
-  - [Make](https://pt.wikipedia.org/wiki/Make)
+  - [Docker](https://rancher.com/docs/rancher/v1.6/en/hosts/#supported-docker-versions) *;
+  - [Docker Compose](https://github.com/docker/compose/releases/tag/1.22.0) * ;
+  - [Make](https://pt.wikipedia.org/wiki/Make)**.
+
+    * _Esta dependência será verificada durante a execução do script `install.sh`_
+    ** _Esta dependência necessita de instalação manual
+    
 
 ## Suíte install
 
@@ -38,7 +42,7 @@ A Rede Livre é, por enquanto, formada por 3 produtos principais:
   - [Mapas Culturais](https://github.com/hacklabr/mapasculturais); 
   - [Wordpress](https://github.com/redelivre/2.0);
   
-De forma adicional, adicionamos no [_branch_](https://git-scm.com/book/pt-br/v1/Ramifica%C3%A7%C3%A3o-Branching-no-Git-O-que-%C3%A9-um-Branch) [dev](https://github.com/lunhg/install/tree/dev) mais 5 produtos, ainda em fase de desenvolvimento, e portanto, sujeitos a possíveis instabilidades e malfuncionamento:
+De forma adicional, adicionamos no [_branch_](https://git-scm.com/book/pt-br/v1/Ramifica%C3%A7%C3%A3o-Branching-no-Git-O-que-%C3%A9-um-Branch) [dev](https://github.com/lunhg/install/tree/dev) mais 6 produtos, ainda em fase de desenvolvimento, e portanto, sujeitos a possíveis instabilidades e malfuncionamento:
 
   - [alpine](https://gitlab.com/install/alpine);
     - Imagem customizavel para execução de OS enxuto;
@@ -51,10 +55,13 @@ De forma adicional, adicionamos no [_branch_](https://git-scm.com/book/pt-br/v1/
     - deve acompanhar [tg-bot-commands](https://gitlab.com/install/tg-bot-commands); 
   - [assistente](https://gitlab.com/install/assistente)
     - API de gerenciamento de  multiplos robos e seus comandos;
+    
+  - [WebWhatsapp-Wrapper](https://www.github.com/lunhg/WebWhatsapp-Wrapper): customização de um bot whatsapp python rodando com um wrapper de [web.whatsapp.com](https://web.whatsapp.com)
 
 # Chaves `ssh`
 
-Dentre os _softwares_ que constituem a suíte `#redelivre`, alguns estão localizados no [gitlab](https://gitlab.com/install).
+Dentre os _softwares_ que constituem a suíte `#redelivre`, alguns estão localizados no [gitlab](https://gitlab.com/install). Estamos seguindo essa abordagem como experiência de uma provável migração.
+
 Para habilitar clonagens e updates com o mínimo de digitação de senhas e maior flexibilidade e segurança para servidores remotos, 
 uma chave `ssh` deve ser gerada:
 
@@ -134,15 +141,17 @@ $ git remote add gitlab git@gitlab.com:install/install.git
 ```
 ### Crie um arquivo .env
 
-O arquivo `.env` será utilizado para flexibilzar instâncias diversas do _software_. Em outras palavras, permitirá que um mesmo código-fonte poderá gerar, de acordo com variáveis de ambiente diferentes, servidores diversos com a mesma função.
+O arquivo `.env` será utilizado para flexibilzar instâncias diversas da _suite_. Em outras palavras, permitirá que um mesmo código-fonte poderá gerar, de acordo com diferente variáveis de ambiente do sistema (tal como `hostname`), mas prefixadas de acordo com o _software_ (wordpress, bases de dados, microserverviços , etc...). Exemplos:
 
-Estes arquivos serão lidos pelo `docker-compose` e são acompanhados por um `$` no arquivo `docker-compose.yml`.
+  - Wordpress: Página principal, ou `<hostname>`
+  - Load Balancer: `lb.<hostname>`
+  - Adminer:  `adminer.<hostname>`
+  - PHPmyadmin: `phpmyadmin.<hostname>`
 
 ```
 # Imagens de base
-username=hacker
-apk_dependencies=sudo make git
-TRAVIS_LOCAL=senhasupersecreta
+username=<username>
+apk_dependencies=sudo make git <adicione!>
 NODE_ENV=10.11.0
 
 # Pontos de acesso
@@ -164,7 +173,7 @@ TELEGRAM_DOMAIN=https://api.local
 TELEGRAM_TOKEN=<token>
 TELEGRAM_ADMINS=<admin1>+<admin2>+<admin3>...
 
-# API robo
+# API robo telegram
 assistente_node_env=production
 assistente_port=3000
 assistente_redis_host=redis.local
@@ -177,6 +186,11 @@ assistente_secret=<segredo_sessions>
 openid_id=<id_openid>
 openid_secret=<segredo_openid>
 
+# API Wrapper whatsapp
+www_selenium_client=firefox
+www_botname=<nome
+www_bot_module=<gituser>/WebWhatsapp-Wrapper-<git_bot_class>
+www_bot_plugins=<gituser>/WebWhatsapp-Wrapper-plugin-<pluginA>:<gituser>/WebWhatsapp-Wrapper-plugin-<pluginB>:<gituser>/WebWhatsapp-Wrapper-plugin-<pluginC>
 ```
 
 ### Execute `./install.sh`

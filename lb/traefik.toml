@@ -96,17 +96,18 @@ s0mCenhyg34fHcevd2i8OyUY9dlunPc1763wjPIiRk6nGq+M9wSV
 
 [docker]
 endpoint = "unix:///var/run/docker.sock"
-domain = "redelivre"
+domain = "alarm.local.pi"
 watch = true
 exposedByDefault = false
 
-# [acme]
-# email = "mail@mail.com"
-# storage = "acme.json"
-# entryPoint = "https"
-# onHostRule = true
-# [acme.httpChallenge]
-# entryPoint = "http"
+[acme]
+email = "lunhanig@gmail.com"
+storage = "acme.json"
+entryPoint = "https"
+onHostRule = true
+
+[acme.httpChallenge]
+entryPoint = "http"
 
 # [accessLog]
 # filePath = "log/traefik.log"
