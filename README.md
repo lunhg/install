@@ -94,13 +94,31 @@ Enter passphrase for /home/<user>/.ssh/gitlab:
 ## Rápido (sujeito a bugs):
 
 
-Supõe a presença de um do [curl](https://pt.wikipedia.org/wiki/Curl):
+Supõe a presença de um do [curl](https://pt.wikipedia.org/wiki/Curl) e de variáveis de ambiente padrão (Maísuculas) e customizáveis/únicas (minúsculas):
 
   ```
-  $ DOCKER_VERSION=<X.Y.Z> \
-    DOCKER_COMPOSE_VERSION=<X.Y.Z> \
+  $ DOCKER_VERSION=<18.06> \
+    DOCKER_COMPOSE_VERSION=<1.22.0> \
+    NODE_VERSION=<v11.0.0> \
+    REDIS_PORT=<6379> \
     REMOTE='<origin|lunhg|gitlab|...> \
     BRANCH='<master|dev|...>' \
+    HOME='</home/$(whoami)>' \
+    ADMIN_EMAIL='<email@mail.com>' \
+    ADMIN_STORAGE='<acme.json>' \
+    TG_BOTNAME= '<random-uuid>' \
+    WWW_BOTNAME= '<random-uuid>' \
+    telegram_token=<token> \
+    telegram_admins='12345+23456+345' \
+    openid_id=<id> \
+    openid_secret=<secret> \
+    curl --cookie "_gitlab_session=<meucookiegitlab*>" -o- https://gitlab.com/install/install/raw/dev/install.sh | bash
+  ```
+
+__* As variáveis em letras minúsculas atestam variáveis únicas e devem ser mantidas em segredo, de forma que uma forma enxuta do comando acima pode ser__ :
+
+```
+  $ ADMIN_EMAIL='<email@mail.com>' \
     telegram_name='<botname>' \
     telegram_token=<token> \
     telegram_admins='12345+23456+345' \
@@ -109,21 +127,7 @@ Supõe a presença de um do [curl](https://pt.wikipedia.org/wiki/Curl):
     curl --cookie "_gitlab_session=<meucookiegitlab*>" -o- https://gitlab.com/install/install/raw/dev/install.sh | bash
   ```
 
-As variáveis com letras maiúsculas indicam valores que possuem um valor padrão (_default_). 
-
-Já as variáveis em letras minúsculas atestam variáveis únicas e devem ser mantidas em segredo, de forma que uma forma enxuta
-do comando acima pode ser:
-
-```
-  $ telegram_name='<botname>' \
-    telegram_token=<token> \
-    telegram_admins='12345+23456+345' \
-    openid_id=<id> \
-    openid_secret=<secret> \
-    curl --cookie "_gitlab_session=<meucookiegitlab*>" -o- https://gitlab.com/install/install/raw/dev/install.sh | bash
-  ```
-
-_* Um cookie gitlab pode ser encontrado no google chrome; para acessá-lo, esteja logado no gitlab, clique no cadeado verde ao lado da caixa de URI, e procure pelo cookie referente à sua sessão atual gitlab_
+__* Um cookie gitlab pode ser encontrado no google chrome; para acessá-lo, esteja logado no gitlab, clique no cadeado verde ao lado da caixa de URI, e procure pelo cookie referente à sua sessão atual gitlab__
 
 ## Desenvolvedores
 
