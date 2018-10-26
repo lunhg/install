@@ -1,7 +1,10 @@
 sudo: required
 
+addons:
+  ssh_known_hosts: hacker@dev.org.br
+
 env:
-  DOCKER_COMPOSE_VERSION: 1.8.1
+  DOCKER_COMPOSE_VERSION: 1.22.0
 
 services:
   - docker
@@ -10,6 +13,7 @@ before_install:
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
+  - docker -v
   - docker-compose -v
   - docker -v
   # symfony application folder
@@ -18,6 +22,6 @@ before_install:
   # - cat docker-compose.yml
 
 script:
-  - docker-compose build
-  - docker-compose up -d
-  - docker-compose ps
+  - chmod +x ./install.sh
+  - telegram_token=$TG_TOKEN telegram_name=$TG_NAME telegram_admins=$TG_ADMINS openid_id=$OPENID openid_secret=$OPENSECRET' ADMIN_EMAIL=$EMAIL ./install.sh 
+ 

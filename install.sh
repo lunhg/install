@@ -1,7 +1,5 @@
 #!/bin/sh
 
-DOCKER_VERSION=${DOCKER_VERSION:='18.06'}
-DOCKER_COMPOSE_VERSION=${DOCKER_COMPOSE_VERSION:='1.22.0'}
 NODE_VERSION=${NODE_VERSION:='v11.0.0'}
 REDIS_PORT=${REDIS_PORT:='6379'}
 REMOTE=${REMOTE:='gitlab'}
@@ -28,17 +26,6 @@ echo "===> Configuring docker-compose $DOCKER_COMPOSE_VERSION"
 echo "===> Configuring remote $REMOTE"
 echo "===> Configuring branch $BRANCH"
 echo "===> Configuring prefix $REDELIVRE_PATH"
-
-# Check if docker and docker-compose exists
-if [ ! -n $hasDocker ] ; then
-    echo "==> Installing docker"
-    curl https://releases.rancher.com/install-docker/${DOCKER_VERSION}.sh | sh
-fi
-
-if [ ! -n $hasDockerCompose ] ; then
-    echo "==> Installing docker-compose"
-    sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-fi
 
 if [ ! -d $REDELIVRE_PATH ] ; then
     echo "==> Creating $REDELIVRE_PATH"
@@ -81,6 +68,11 @@ for url in "WebWhatsapp-Wrapper";  do
         git clone https://www.github.com/lunhg/$url.git $REDELIVRE_PATH/$url
     fi
 done
+
+# install lavazap
+if [ ! -d $HOME/redelivre/indicadores-whatsapp ] ; then
+    git clone https://gitlab.com/ursal/indicadores-whatsapp.git
+fi
 
 # Configure a .env file
 if [ ! -d $REDELIVRE_PATH/.env ] ; then
