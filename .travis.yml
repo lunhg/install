@@ -23,5 +23,6 @@ before_install:
 
 script:
   - chmod +x ./install.sh
-  - echo "y" | ./install.sh 
- 
+  - ./install.sh 
+  - make status
+  - make urls
