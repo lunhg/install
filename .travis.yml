@@ -23,6 +23,11 @@ before_install:
 
 script:
   - chmod +x ./install.sh
-  - ./install.sh 
+  - telegram_name=$telegram_name \
+    telegram_token=$telegram_token \
+    telegram_admin=$telegram_admins \
+    openid_id=$openid_id \
+    openid_secret=$openid_secret \
+    ADMIN_EMAIL=$ADMIN_EMAIL ./install.sh
   - make status
   - make urls
