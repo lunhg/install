@@ -23,5 +23,5 @@ before_install:
 
 script:
   - chmod +x ./install.sh
-  - echo "y" ./install.sh 
+  - echo "y" | ./install.sh 
  
