@@ -2,7 +2,7 @@
 
 NODE_VERSION=${NODE_VERSION:='v11.0.0'}
 REDIS_PORT=${REDIS_PORT:='6379'}
-REMOTE=${REMOTE:='gitlab'}
+REMOTE=${REMOTE:='lunhg'}
 BRANCH=${BRANCH:='dev'}
 HOME=${HOME:=/home/$(whoami)}
 REDELIVRE_PATH=${REDELIVRE_PATH:=$HOME/redelivre}
@@ -48,31 +48,26 @@ done
 cd $HOME/redelivre/install \
     && git config user.name "$(whoami)" \
     && git remote add lunhg https://www.github.com/lunhg/install.git \
-    && git remote add gitlab git@gitlab.com:install/install.git \
     && git fetch --all \
     && git pull $REMOTE $BRANCH \
-    && git checkout dev
+    && git checkout $BRANCH
 
 cd -
 
-# install gitlab repos in prefixed $HOME
-for url in "alpine" "alpine-node" "alpine-redis" "redis-ui" "tg-bot" "tg-bot-commands" "assistente";  do
-    if [ ! -d $HOME/redelivre/$url ] ; then
-        git clone  git@gitlab.com:install/$url.git $REDELIVRE_PATH/$url
-    fi
-done
-
 # install whatsapp repos in prefixed $HOME
-for url in "WebWhatsapp-Wrapper";  do
+for url in "alpine" \
+               "alpine-node" \
+               "alpine-redis" \
+               "redis-ui" \
+               "tg-bot" \
+               "tg-bot-commands" \
+               "Assistente" \
+               "WebWhatsapp-Wrapper";  do
     if [ ! -d $HOME/redelivre/$url ] ; then
         git clone https://www.github.com/lunhg/$url.git $REDELIVRE_PATH/$url
     fi
 done
 
-# install lavazap
-if [ ! -d $HOME/redelivre/indicadores-whatsapp ] ; then
-    git clone https://gitlab.com/ursal/indicadores-whatsapp.git
-fi
 
 # Configure a .env file
 if [ ! -d $REDELIVRE_PATH/.env ] ; then

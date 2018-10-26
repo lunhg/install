@@ -58,36 +58,6 @@ De forma adicional, adicionamos no [_branch_](https://git-scm.com/book/pt-br/v1/
     
   - [WebWhatsapp-Wrapper](https://www.github.com/lunhg/WebWhatsapp-Wrapper): customização de um bot whatsapp python rodando com um wrapper de [web.whatsapp.com](https://web.whatsapp.com)
 
-# Chaves `ssh`
-
-Dentre os _softwares_ que constituem a suíte `#redelivre`, alguns estão localizados no [gitlab](https://gitlab.com/install). Estamos seguindo essa abordagem como experiência de uma provável migração.
-
-Para habilitar clonagens e updates com o mínimo de digitação de senhas e maior flexibilidade e segurança para servidores remotos, 
-uma chave `ssh` deve ser gerada:
-
-```
-$ ssh-keygen
-Generating public/private rsa key pair.
-Enter file in which to save the key (/home/<user>/.ssh/id_rsa): /home/<user>/.ssh/gitlab
-****
-```
-
-Copie a chave pública correspondente e crie-a em suas configurações de acesso remoto do [gitlab](https://gitlab.com/profile/keys).
-
-```
-$ cat ~/.ssh/gitlab
-<chave_publica>
-```
-
-Agora habilite  acesso remoto com `ssh`:
-
-```
-$ eval $(ssh-agent -s) && ssh-add ~/.ssh/gitlab
-Agent pid <pid>
-Enter passphrase for /home/<user>/.ssh/gitlab: 
-****
-```
-
 # Instalação
 
 
@@ -103,7 +73,6 @@ Supõe a presença de um do [curl](https://pt.wikipedia.org/wiki/Curl) e de vari
     REDIS_PORT=<6379> \
     REMOTE='<origin|lunhg|gitlab|...> \
     BRANCH='<master|dev|...>' \
-    HOME='</home/$(whoami)>' \
     ADMIN_EMAIL='<email@mail.com>' \
     ADMIN_STORAGE='<acme.json>' \
     TG_BOTNAME= '<random-uuid>' \
@@ -112,10 +81,10 @@ Supõe a presença de um do [curl](https://pt.wikipedia.org/wiki/Curl) e de vari
     telegram_admins='12345+23456+345' \
     openid_id=<id> \
     openid_secret=<secret> \
-    curl --cookie "_gitlab_session=<meucookiegitlab*>" -o- https://gitlab.com/install/install/raw/dev/install.sh | bash
+    curl -o- https://raw.githubusercontent.com/lunhg/install/dev/install.sh | bash
   ```
 
-__* As variáveis em letras minúsculas atestam variáveis únicas e devem ser mantidas em segredo, de forma que uma forma enxuta do comando acima pode ser__ :
+As variáveis em letras minúsculas atestam variáveis únicas e devem ser mantidas em segredo, de forma que uma forma enxuta do comando acima pode ser:
 
 ```
   $ ADMIN_EMAIL='<email@mail.com>' \
@@ -124,10 +93,8 @@ __* As variáveis em letras minúsculas atestam variáveis únicas e devem ser m
     telegram_admins='12345+23456+345' \
     openid_id=<id> \
     openid_secret=<secret> \
-    curl --cookie "_gitlab_session=<meucookiegitlab*>" -o- https://gitlab.com/install/install/raw/dev/install.sh | bash
+    curl https://raw.githubusercontent.com/lunhg/install/dev/install.sh| bash
   ```
-
-__* Um cookie gitlab pode ser encontrado no google chrome; para acessá-lo, esteja logado no gitlab, clique no cadeado verde ao lado da caixa de URI, e procure pelo cookie referente à sua sessão atual gitlab__
 
 ## Desenvolvedores
 
@@ -140,21 +107,19 @@ Este repositório e adicione forks (opcional para desenvolvedores):
 # Repositório principal e fork
 $ mkdir $HOME/redelivre
 $ git clone https://www.github.com/redelivre/install $HOME/redelivre/install
-$ git remote add gitlab git@gitlab.com:install/install.git 
+$ git remote add https://www.github.com/lunhg/install $HOME/redelivre/install
 $ git fetch --all
-$ git pull gitlab dev
+$ git pull lunhg dev
 $ chown +x install.sh
 $ ./install.sh 
 ```
 
-__ * Um arquivo `.env` será gerado para flexibilzar instâncias diversas da _suite_. Em outras palavras, permitirá que um mesmo código-fonte poderá gerar, de acordo com diferente variáveis de ambiente do sistema (tal como `hostname`), mas prefixadas de acordo com o _software_ (wordpress, bases de dados, microserverviços , etc...). Exemplos: __
+Um arquivo `.env` será gerado para flexibilzar instâncias diversas da _suite_. Em outras palavras, permitirá que um mesmo código-fonte poderá gerar, de acordo com diferente variáveis de ambiente do sistema (tal como `hostname`), mas prefixadas de acordo com o _software_ (wordpress, bases de dados, microserverviços , etc...). 
 
 ## Pós- instalção
 
 O _script_ `./install.sh` executará:
 
-- Verificação na máquina local pela existência do _software_ docker (e instalação, se necessário);
-- Verificação na máquina local pela existência do _software_ docker-compose (e instalação, se necessário)
 - Verificação na máquina local pela existência dos repositórios que incluem a suíte `#redelivre` (_download_, se necessário);
 - Execução da receita `redelivre` do programa `Make`, cuja ações são:
   - Compilar imagens customizadas;
