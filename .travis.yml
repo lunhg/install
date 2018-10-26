@@ -23,5 +23,5 @@ before_install:
 
 script:
   - chmod +x ./install.sh
-  - telegram_token=$TG_TOKEN telegram_name=$TG_NAME telegram_admins=$TG_ADMINS openid_id=$OPENID openid_secret=$OPENSECRET' ADMIN_EMAIL=$EMAIL ./install.sh 
+  - ./install.sh 
  
