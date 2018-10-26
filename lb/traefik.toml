@@ -96,13 +96,13 @@ s0mCenhyg34fHcevd2i8OyUY9dlunPc1763wjPIiRk6nGq+M9wSV
 
 [docker]
 endpoint = "unix:///var/run/docker.sock"
-domain = "alarm.local.pi"
+domain = "$docker.domain"
 watch = true
 exposedByDefault = false
 
 [acme]
-email = "lunhanig@gmail.com"
-storage = "acme.json"
+email = "$acme.email"
+storage = "$acme.storage"
 entryPoint = "https"
 onHostRule = true
 

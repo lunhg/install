@@ -32,6 +32,7 @@ networks:
 # Serviços:
 # - imagens de base
 
+
 # - web
 # - bases de dados
 services:
@@ -47,11 +48,11 @@ services:
         environment:
             - "username=$username"
         volumes:
-            - alpine_bin:/usr/bin
-            - alpine_local:/usr/local
+            - alpine_usr_bin:/usr/bin
+            - alpine_usr_local:/usr/local
             - alpine_home:/home/$username
-            - alpine_run:/var/run
-            - alpine_log:/var/log
+            - alpine_var_run:/var/run
+            - alpine_var_log:/var/log
 
     # git@gitlab:install/alpine-redis.git
     __redis__:
@@ -62,7 +63,7 @@ services:
             - alpine_run:/var/run
             - alpine_log:/var/log
             - alpine_home:/home/$username/
-            - redis_etc:/etc/redis/
+            - alpine_etc_redis:/etc/redis/
         depends_on:
             - alpine
 
@@ -71,6 +72,12 @@ services:
         extends:
             file: ../alpine-node/docker-compose.yml
             service: node
+        volumes:
+            - alpine_run:/var/run
+            - alpine_log:/var/log
+            - alpine_home:/home/$username/
+            - alpine_usr_bin:/usr/bin
+            - alpine_usr_local:/usr/local
         depends_on:
             - alpine
 
@@ -422,6 +429,23 @@ services:
               ipv4_address: 10.0.0.100
 
 
+    lavazap:
+        extends:
+            file: ../indicadores-whatsapp
+            service: shiny
+        user: 'root'
+        ports:
+            - 3838/tcp
+        volumes:
+            - shiny_logs:/var/log/shiny-server
+            - "$PWD/../indicadores-whatsapp:/srv/shiny-server"
+        labels: 
+            traefik.docker.network: rl
+            traefik.frontend.rule: Host:lavazap.dev.org.br
+            traefik.port: '3838'
+            traefik.enable: 'true'
+        networks:
+            rl:
     # ====
     # BOTS
     # ====

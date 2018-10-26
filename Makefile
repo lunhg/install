@@ -17,7 +17,7 @@ app_lc_build_frontend:
 app_lc_migrations:
 	echo "==> Executing migrations on login-cidadao..."
   sleep: 5
-	docker-compose exec mariadb mysql -uroot -p"11111" -e "create database lc;"
+	docker-compose exec mariadb mysql -uroot -p $mariadb_root_pwd -e "create database lc;"
 	docker-compose exec app_lc php app/console doctrine:schema:create
 	docker-compose exec app_lc php app/console lc:database:populate batch/
 	docker-compose exec app_lc php app/console doctrine:schema:update --force
@@ -25,14 +25,14 @@ app_lc_migrations:
 app_mc_migrations:
 	echo "==> Executing migrations on mapasculturais..."
 	docker-compose exec app_mc ./scripts/db-update.sh
-	docker-compose exec app_mc ./scripts/mc-db-updates.sh -d mc.redelivre
+	docker-compose exec app_mc ./scripts/mc-db-updates.sh -d $mc
 	docker-compose exec app_mc ./scripts/generate-proxies.sh
 	# docker-compose exec postgres psql -d mapas -U mapas -f ../db/schema.sql
 	# docker-compose exec postgres psql -d mapas -U mapas -f ../db/initial-data.sql
 
 app_wp_migrations:
 	echo "==> Executing migrations on wordpress..."
-	docker-compose exec app_wp wp --allow-root core install  --path=./web/wp --url=https://redelivre --title=teste-redelivre --admin_user=root --admin_password=123 --skip-email --admin_email=teste@teste.com
+	docker-compose exec app_wp wp --allow-root core install  --path=./web/wp --url=https://$wordpress --title=teste-redelivre --admin_user=root --admin_password=$mariadb_root_pwd --skip-email --admin_email=teste@teste.com
 	docker-compose exec app_wp wp --allow-root plugin activate wpro
 
 lc:
@@ -117,16 +117,18 @@ urls:
 	@echo "Urls disponíveis"
 	@echo "-------------------------------------------------"
 	@echo ""
-	@echo "Wordpress Admin:    http://redelivre/wp/wp-admin/"
-	@echo "Wordpress:          http://redelivre/"
-	@echo "Login Cidadão:      http://lc.redelivre/"
-	@echo "Mapas Culturais:    http://mc.redelivre/"
-	@echo "Servidor de E-mail: http://smtp.redelivre/"
-	@echo "Servidor S3:        http://s3.redelivre/"
-	@echo "PHPMyAdmin:         http://phpmyadmin.redelivre/"
-	@echo "Adminer:            http://adminer.redelivre/"
-	@echo "Telegram bot:       http://tg.redelivre/"
-	@echo ""
+	@echo "Wordpress Admin:    https://"`hostname`"/wp/wp-admin/"
+	@echo "Wordpress:          https://"`hostname`
+	@echo "Login Cidadão:      https://lc."`hostname`
+	@echo "Mapas Culturais:    https://mc."`hostname`
+	@echo "Servidor de E-mail: https://smtp."`hostname`
+	@echo "Servidor S3:        https://s3."`hostname`
+	@echo "PHPMyAdmin:         https://phpmyadmin."`hostname`
+	@echo "Adminer:            https://adminer."`hostname`
+	@echo "Telegram bot:       https://$tg_bot."`hostname`
+	@echo "Telegram bot api:   https://$tg_api."`hostname`
+	@echo "Whatsapp selenium:  https://$www_selenium."`hostname`
+	@echo "Whatsapp bot:       https://$www_bot."`hostname`
 	@echo "-------------------------------------------------"
 
 clean:

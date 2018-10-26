@@ -10,8 +10,9 @@ HOME=${HOME:=/home/$(whoami)}
 REDELIVRE_PATH=${REDELIVRE_PATH:=$HOME/redelivre}
 ADMIN_EMAIL=${ADMIN_EMAIL:="mail@mail.org"}
 ADMIN_STORAGE=${ADMIN_STORAGE:="acme.json"}
-TG_BOTNAME=${WWW_BOTNAME:=`cat /proc/sys/kernel/random/uuid`}
+TG_BOTNAME=${TG_BOTNAME:=`cat /proc/sys/kernel/random/uuid`}
 WWW_BOTNAME=${WWW_BOTNAME:=`cat /proc/sys/kernel/random/uuid`}
+MDBPWD=$(cat /proc/sys/kernel/random/uuid)
 hasDocker=`echo $(which docker)`
 hasDockerCompose=`echo $(which docker-compose)`
 
@@ -82,67 +83,70 @@ for url in "WebWhatsapp-Wrapper";  do
 done
 
 # Configure a .env file
-echo "==> Generating .env file at $REDELIVRE_PATH"
-for i in "# who is the conductor" \
-         "username=$(whoami)" \
-         "" \
-         "# conductor needs  a place to stand" \
-         "apk_dependencies=sudo make git" \
-         "NODE_VERSION=$NODE_VERSION" \
-         "REDIS_PORT=$REDIS_PORT" \
-         "" \
-         "# The musicians" \
-         "wordpress=$(hostname)" \
-         "redis=redis.$(hostname)" \
-         "lc=lc.$(hostname)" \
-         "mc=mc.$(hostname)" \
-         "s3=s3.$(hostname)" \
-         "adminer=adminer.$(hostname)" \
-         "phpmyadmin=phpmyadmin.$(hostname)" \
-         "smtp=smtp.$(hostname)" \
-         "elk=elk.$(hostname)" \
-         "lb=lb.$(hostname)" \
-         "" \
-         "# some scores" \
-         "postgres_pwd=$(cat /proc/sys/kernel/random/uuid)" \
-         "mariadb_root_pwd=$(cat /proc/sys/kernel/random/uuid)" \
-         "mariadb_pwd=$(cat /proc/sys/kernel/random/uuid)" \
-         "redis_admin=$(cat /proc/sys/kernel/random/uuid)" \
-         "s3_key=$(cat /proc/sys/kernel/random/uuid)" \
-         "s3_secret=$(cat /proc/sys/kernel/random/uuid)" \
-         "" \
-         "# Bots " \
-         "tg_bot=$TG_BOTNAME.bot.$(hostname)" \
-         "tg_api=$TG_BOTNAME.api.$(hostname)" \
-         "www_selenium=$WWW_BOTNAME.selenium.$(hostname)" \
-         "www_bot=$WWW_BOTNAME.bot.$(hostname)" \
-         "# some musicians need aditional configuration" \
-         "# assistente api" \
-         "tg_api_node_env=production" \
-         "tg_api_redis_db=0" \
-         "tg_api_jwt_issuer=feathers-plus" \
-         "tg_api_session_name=$(cat /proc/sys/kernel/random/uuid)" \
-         "tg_api_secret=$(cat /proc/sys/kernel/random/uuid)" \
-         "" \
-         "# WebWhatsappWrapper" \
-         "www_selenium_client=firefox" \
-         "www_bot_botname=$WWW_BOTNAME" \
-         "www_bot_module=lunhg/WebWhatsapp-Wrapper-bot-foo" \
-         "www_bot_plugins=lunhg/WebWhatsapp-Wrapper-plugin-logger:lunhg/WebWhatsapp-Wrapper-plugin-elastic-search"; do \
-    echo "==> $i"
-    echo $i >> $REDELIVRE_PATH/install/.env ;
-done
+if [ ! -d $REDELIVRE_PATH/.env ] ; then
+    echo "==> Generating .env file at $REDELIVRE_PATH"
+    for i in "# who is the conductor" \
+                 "username=$(whoami)" \
+                 "" \
+                 "# conductor needs  a place to stand" \
+                 "apk_dependencies=sudo make git" \
+                 "NODE_VERSION=$NODE_VERSION" \
+                 "REDIS_PORT=$REDIS_PORT" \
+                 "" \
+                 "# The musicians" \
+                 "wordpress=$(hostname)" \
+                 "redis=redis.$(hostname)" \
+                 "lc=lc.$(hostname)" \
+                 "mc=mc.$(hostname)" \
+                 "s3=s3.$(hostname)" \
+                 "adminer=adminer.$(hostname)" \
+                 "phpmyadmin=phpmyadmin.$(hostname)" \
+                 "smtp=smtp.$(hostname)" \
+                 "elk=elk.$(hostname)" \
+                 "lb=lb.$(hostname)" \
+                 "" \
+                 "# some scores" \
+                 "postgres_pwd=$(cat /proc/sys/kernel/random/uuid)" \
+                 "mariadb_root_pwd=$MDBPWD" \
+                 "mariadb_pwd=$(cat /proc/sys/kernel/random/uuid)" \
+                 "redis_admin=$(cat /proc/sys/kernel/random/uuid)" \
+                 "s3_key=$(cat /proc/sys/kernel/random/uuid)" \
+                 "s3_secret=$(cat /proc/sys/kernel/random/uuid)" \
+                 "" \
+                 "# Bots " \
+                 "tg_bot=$TG_BOTNAME.bot.$(hostname)" \
+                 "tg_api=$TG_BOTNAME.api.$(hostname)" \
+                 "www_selenium=$WWW_BOTNAME.selenium.$(hostname)" \
+                 "www_bot=$WWW_BOTNAME.bot.$(hostname)" \
+                 "# some musicians need aditional configuration" \
+                 "# assistente api" \
+                 "tg_api_node_env=production" \
+                 "tg_api_redis_db=0" \
+                 "tg_api_jwt_issuer=feathers-plus" \
+                 "tg_api_session_name=$(cat /proc/sys/kernel/random/uuid)" \
+                 "tg_api_secret=$(cat /proc/sys/kernel/random/uuid)" \
+                 "" \
+                 "# WebWhatsappWrapper" \
+                 "www_selenium_client=firefox" \
+                 "www_bot_botname=$WWW_BOTNAME" \
+                 "www_bot_module=lunhg/WebWhatsapp-Wrapper-bot-foo" \
+                 "www_bot_plugins=lunhg/WebWhatsapp-Wrapper-plugin-logger:lunhg/WebWhatsapp-Wrapper-plugin-elastic-search"; do \
+        echo "==> $i"
+        echo $i >> $REDELIVRE_PATH/install/.env ;
+    done
 
+    for i in "telegram_name" "telegram_token" "telegram_admins" "openid_id" "openid_secret" ; do
+        if [ ! -n ${!i} ] ; then
+            echo "==> ${!i} not declared"
+            exit 1
+        fi
+        if [ -n $i ] ; then
+            echo $i'='${!i} >> $REDELIVRE_PATH/install/.env
+        fi
+    done
+fi
+    
 
-for i in "telegram_name" "telegram_token" "telegram_admins" "openid_id" "openid_secret" ; do
-    if [ ! -n ${!i} ] ; then
-        echo "==> ${!i} not declared"
-        exit 1
-    fi
-    if [ -n $i ] ; then
-        echo $i'='${!i} >> $REDELIVRE_PATH/install/.env
-    fi
-done
 
 # Configure traefik
 # - Docker options
@@ -154,7 +158,13 @@ for i in 's|\$docker.domain|'`hostname`'|g' \
 done
 
 # Configure Makefile
-for i in 's|\$mc|mc.'`hostname`'|g' ; do \
+for i in 's|\$wordpress|'`hostname`'|g' \
+         's|\$mc|mc.'`hostname`'|g' \
+         's|\$mariadb_root_pwd|'$MDBPWD'|g' \
+         's|\$tg_bot|'$TG_BOTNAME'.bot|g' \
+         's|\$tg_api|'$TG_BOTNAME'.api|g' \
+         's|\$www_bot|'$WWW_BOTNAME'.bot|g' \
+         's|\$www_selenium|'$WWW_BOTNAME'.selenium|g'  ; do \
     echo "==> Configuring install/Makefile  $i"
     sed -i -e $i $REDELIVRE_PATH/install/Makefile
 done

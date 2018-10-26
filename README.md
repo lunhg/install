@@ -137,72 +137,17 @@ Este repositório e adicione forks (opcional para desenvolvedores):
 
 
 ```
-# Repositório principal e forks
+# Repositório principal e fork
 $ mkdir $HOME/redelivre
 $ git clone https://www.github.com/redelivre/install $HOME/redelivre/install
-$ git remote add lunhg https://www.github.com/lunhg/install
 $ git remote add gitlab git@gitlab.com:install/install.git 
-```
-### Crie um arquivo .env
-
-O arquivo `.env` será utilizado para flexibilzar instâncias diversas da _suite_. Em outras palavras, permitirá que um mesmo código-fonte poderá gerar, de acordo com diferente variáveis de ambiente do sistema (tal como `hostname`), mas prefixadas de acordo com o _software_ (wordpress, bases de dados, microserverviços , etc...). Exemplos:
-
-  - Wordpress: Página principal, ou `<hostname>`
-  - Load Balancer: `lb.<hostname>`
-  - Adminer:  `adminer.<hostname>`
-  - PHPmyadmin: `phpmyadmin.<hostname>`
-
-```
-# Imagens de base
-username=<username>
-apk_dependencies=sudo make git <adicione!>
-NODE_ENV=10.11.0
-
-# Pontos de acesso
-redisUI=redis.local
-wordpress=wp.local
-loginCidadao=lc.local
-minio=s3.alarm.local
-adminer=adminer.local
-phpmyadmin=phpmyadmin.local
-smtp=smtp.local
-elk=elk.local
-traefik=lb.local
-tgbot=bot.local
-api=api.local
-
-# Robo
-TELEGRAM_NAME=R4dar
-TELEGRAM_DOMAIN=https://api.local
-TELEGRAM_TOKEN=<token>
-TELEGRAM_ADMINS=<admin1>+<admin2>+<admin3>...
-
-# API robo telegram
-assistente_node_env=production
-assistente_port=3000
-assistente_redis_host=redis.local
-assistente_redis_port=6379
-assistente_redis_db=0
-assistente_jwt_issuer=<nome_do_issuer>
-assistente_jwt_audience=https://api.local
-assistente_session_name=<nome_para_sessions>
-assistente_secret=<segredo_sessions>
-openid_id=<id_openid>
-openid_secret=<segredo_openid>
-
-# API Wrapper whatsapp
-www_selenium_client=firefox
-www_botname=<nome
-www_bot_module=<gituser>/WebWhatsapp-Wrapper-<git_bot_class>
-www_bot_plugins=<gituser>/WebWhatsapp-Wrapper-plugin-<pluginA>:<gituser>/WebWhatsapp-Wrapper-plugin-<pluginB>:<gituser>/WebWhatsapp-Wrapper-plugin-<pluginC>
-```
-
-### Execute `./install.sh`
-
-```
+$ git fetch --all
+$ git pull gitlab dev
 $ chown +x install.sh
-$ ./install.sh
+$ ./install.sh 
 ```
+
+__ * Um arquivo `.env` será gerado para flexibilzar instâncias diversas da _suite_. Em outras palavras, permitirá que um mesmo código-fonte poderá gerar, de acordo com diferente variáveis de ambiente do sistema (tal como `hostname`), mas prefixadas de acordo com o _software_ (wordpress, bases de dados, microserverviços , etc...). Exemplos: __
 
 ## Pós- instalção
 
